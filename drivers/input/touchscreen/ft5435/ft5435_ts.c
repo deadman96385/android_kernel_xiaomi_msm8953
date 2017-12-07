@@ -51,13 +51,25 @@
 #if defined(FOCALTECH_AUTO_UPGRADE)
 #define FTS_VENDOR_1	0x3b
 #define FTS_VENDOR_2	0x51
+#define FTS_VENDOR_3	0xd0
 static unsigned char firmware_data_vendor1[] = {
+#if defined(CONFIG_MACH_XIAOMI_MIDO)
 	#include "HQ_AL1512_C6_FT5435_Biel0x3b_Ver0a_20170119_app.i"
+#elif defined(CONFIG_MACH_XIAOMI_TISSOT)
+	#include "fw_vendor_0x3b.i"
+#endif
 };
 
 static unsigned char firmware_data_vendor2[] = {
-
+#if defined(CONFIG_MACH_XIAOMI_MIDO)
 	#include "HQ_AL1512_C6_FT5435_Ofilm0x51_Ver0a_20170119_app.i"
+#elif defined(CONFIG_MACH_XIAOMI_TISSOT)
+	#include "fw_vendor_0x51.i"
+#endif
+};
+
+static unsigned char firmware_data_vendor3[] = {
+	#include "fw_vendor_0xd0.i"
 };
 #endif
 #define TCT_KEY_BACK  158
@@ -4097,7 +4109,7 @@ INIT_WORK(&data->work_vr, ft5435_change_vr_switch);
 	fts_fw_vendor_id = data->fw_vendor_id;
 	printk("upgrade,fts_fw_vendor_id=0x%02x\n",  data->fw_vendor_id);
 #if defined(FOCALTECH_AUTO_UPGRADE)
-	if ((fts_fw_vendor_id != FTS_VENDOR_1) && (fts_fw_vendor_id != FTS_VENDOR_2)) {
+	if ((fts_fw_vendor_id != FTS_VENDOR_1) && (fts_fw_vendor_id != FTS_VENDOR_2) && (fts_fw_vendor_id != FTS_VENDOR_3)) {
 		fts_fw_vendor_id = ft5435_fw_Vid_get_from_boot(client);
 		printk("get_Vid_from_boot, fw_vendor_id=0x%02x\n",  fts_fw_vendor_id);
 	}
@@ -4109,6 +4121,8 @@ INIT_WORK(&data->work_vr, ft5435_change_vr_switch);
 			ft5435_fw_upgrade_by_array_data(&client->dev, firmware_data_vendor1, sizeof(firmware_data_vendor1), !data->pdata->no_force_update);
 		else if (fts_fw_vendor_id == FTS_VENDOR_2)
 			ft5435_fw_upgrade_by_array_data(&client->dev, firmware_data_vendor2, sizeof(firmware_data_vendor2), !data->pdata->no_force_update);
+		else if (fts_fw_vendor_id == FTS_VENDOR_3)
+			ft5435_fw_upgrade_by_array_data(&client->dev, firmware_data_vendor3, sizeof(firmware_data_vendor3), !data->pdata->no_force_update);
 		else
 			printk("[FTS] FW unmatched,stop upgrade\n");
 		data->loading_fw = false;
@@ -4206,7 +4220,7 @@ g_ft5435_ts_data = data;
 	ft5435_i2c_write(client, w_buf, 1);
 	init_ok = 1;
 	wake_lock_init(&ft5436_wakelock, WAKE_LOCK_SUSPEND, "ft5436");
-	if (fts_fw_vendor_id == FTS_VENDOR_1) {
+	if (fts_fw_vendor_id == FTS_VENDOR_1 || fts_fw_vendor_id == FTS_VENDOR_3) {
 		strcpy(tp_info_summary, "[Vendor]Biel, [IC]FT5435, [FW]Ver");
 	} else if (fts_fw_vendor_id == FTS_VENDOR_2) {
 		strcpy(tp_info_summary, "[Vendor]Ofilm, [IC]FT5435, [FW]Ver");
