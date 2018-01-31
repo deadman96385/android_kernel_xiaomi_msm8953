@@ -96,8 +96,8 @@ static inline bool qpnp_pon_check_hard_reset_stored(void)
 {
 	return false;
 }
-+static inline int qpnp_pon_is_lpk(void) { return -ENODEV; }
-+static inline int qpnp_pon_is_ps_hold_reset(void) { return -ENODEV; }
+static inline int qpnp_pon_is_lpk(void) { return -ENODEV; }
+static inline int qpnp_pon_is_ps_hold_reset(void) { return -ENODEV; }
 #endif
 
 #endif
