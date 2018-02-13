@@ -1,0 +1,32 @@
+# Xiaomi configuration options
+
+config MACH_XIAOMI
+	bool "Xiaomi device"
+	depends on ARCH_MSM
+	help
+	  Support for Xiaomi products
+
+config MACH_XIAOMI_MSM8953
+	bool "Xiaomi MSM8953"
+	depends on ARCH_MSM8953
+	select MACH_XIAOMI
+	help
+	  Support for MSM8996 Xiaomi variants
+
+config MACH_XIAOMI_TISSOT
+	bool "Gemini board"
+	select MACH_XIAOMI_MSM8953
+	help
+	  Support for Xiaomi Mi A1 (Tissot)
+
+config MACH_XIAOMI_TIFFANY
+	bool "Tiffany board"
+	select MACH_XIAOMI_MSM8953
+	help
+	  Support for Xiaomi Mi 5X (Tiffany)
+
+config MACH_XIAOMI_MIDO
+	bool "Mido board"
+	select MACH_XIAOMI_MSM8953
+	help
+	  Support for Xiaomi Mi Note 4/4X (Mido)
