@@ -322,6 +322,10 @@ static void msm_restart_prepare(const char *cmd)
 
 	printk(KERN_INFO "%s():need_warm_reset=%d\n", __func__, need_warm_reset);
 
+#ifdef CONFIG_MSM_PRESERVE_MEM
+	need_warm_reset = true;
+#endif
+
 	/* Hard reset the PMIC unless memory contents must be maintained. */
 	if (need_warm_reset) {
 		qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
